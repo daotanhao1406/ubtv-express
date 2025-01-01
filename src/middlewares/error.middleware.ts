@@ -2,10 +2,11 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes, getReasonPhrase } from 'http-status-codes'
 import { env } from '@/config/environment'
+import ApiError from '@/utils/ApiError'
 
 // Middleware xử lý lỗi tập trung trong ứng dụng Back-end NodeJS (ExpressJS)
 export const errorMiddleware = (
-  err: any,
+  err: ApiError,
   req: Request,
   res: Response,
   next: NextFunction
@@ -19,9 +20,8 @@ export const errorMiddleware = (
     message: err.message || getReasonPhrase(err.statusCode), // Nếu lỗi mà không có message thì lấy ReasonPhrases chuẩn theo mã Status Code
     stack: err.stack
   }
-  console.log(err)
   // Chỉ khi môi trường là DEV thì mới trả về Stack Trace để debug dễ dàng hơn, còn không thì xóa đi.
-  // if (env.NODE_ENV !== 'development') delete responseError.stack
+  if (env.NODE_ENV !== 'development') delete responseError.stack
 
   // Đoạn này có thể mở rộng nhiều về sau như ghi Error Log vào file, bắn thông báo lỗi vào group Slack, Telegram, Email...vv
   // ...
