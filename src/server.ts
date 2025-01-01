@@ -7,8 +7,11 @@ import { APIs_V1 } from '@/routes/v1'
 const START_SERVER = () => {
 
   const app: Application = express()
-  const port = process.env.PORT || 8017
 
+  // parse json request body
+  app.use(express.json())
+
+  // v1 api routes
   app.use('/v1', APIs_V1)
 
   app.listen(env.LOCAL_DEV_APP_PORT, () => {

@@ -1,12 +1,11 @@
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
+import { seasonValidation } from '@/validations/season.validation'
 
 const router = Router()
 
 router.route('/').get((req, res) => {
   res.status(StatusCodes.OK).json({ message: 'GET: Api get season' })
-}).post((req, res) => {
-  res.status(StatusCodes.CREATED).json({ message: 'POST: Api create new season' })
-})
+}).post(seasonValidation.createSeason)
 
 export const seasonRoute = router
