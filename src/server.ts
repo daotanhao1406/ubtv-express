@@ -1,17 +1,15 @@
 import express, { Express, Request, Response, Application } from 'express'
-import 'dotenv/config'
 import { CLOSE_DB, CONNECT_DB } from '@/config/mongdodb'
 import exitHook from 'async-exit-hook'
 import { env } from '@/config/environment'
+import { APIs_V1 } from '@/routes/v1'
 
 const START_SERVER = () => {
 
   const app: Application = express()
   const port = process.env.PORT || 8017
 
-  app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to Express & TypeScript Server')
-  })
+  app.use('/v1', APIs_V1)
 
   app.listen(env.LOCAL_DEV_APP_PORT, () => {
     console.log(`3. Server is Fire at http://localhost:${env.LOCAL_DEV_APP_PORT}`)
