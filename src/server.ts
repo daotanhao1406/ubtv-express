@@ -1,16 +1,39 @@
-import express, { Express, Request, Response , Application } from 'express';
-import dotenv from 'dotenv';
+import express, { Express, Request, Response, Application } from 'express'
+import 'dotenv/config'
+import { CLOSE_DB, CONNECT_DB } from '@/config/mongdodb'
+import exitHook from 'async-exit-hook'
+import { env } from '@/config/environment'
 
-//For env File
-dotenv.config();
+const START_SERVER = () => {
 
-const app: Application = express();
-const port = process.env.PORT || 8017;
+  const app: Application = express()
+  const port = process.env.PORT || 8017
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to Express & TypeScript Server');
-});
+  app.get('/', (req: Request, res: Response) => {
+    res.send('Welcome to Express & TypeScript Server')
+  })
 
-app.listen(port, () => {
-    console.log(`Server is Fire at http://localhost:${port}`);
-});
+  app.listen(env.LOCAL_DEV_APP_PORT, () => {
+    console.log(`3. Server is Fire at http://localhost:${env.LOCAL_DEV_APP_PORT}`)
+  })
+
+  exitHook(() => {
+    console.log('4. Disconnecting from MongoDB...')
+    CLOSE_DB()
+    console.log('5. Disconnected from MongoDB')
+  })
+}
+
+// IIFE (Immediately Invoked Function Expression)
+(async () => {
+  try {
+    console.log('1. Connecting to MongoDB...')
+    await CONNECT_DB()
+    console.log('2. Connected to MongoDB')
+
+    START_SERVER()
+  } catch (error) {
+    console.error(error)
+    process.exit(0)
+  }
+})()
