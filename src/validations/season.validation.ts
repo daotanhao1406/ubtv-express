@@ -9,12 +9,10 @@ const createSeason = async (req: Request, res: Response, next: NextFunction) => 
   })
 
   try {
-    console.log('BODY', req.body)
     await correctSeason.validateAsync(req.body, {
       abortEarly: false
     })
-    // next()
-    res.status(StatusCodes.CREATED).json({ message: 'POST from validation: Api createSeason' })
+    next()
   } catch (error) {
     console.log(error)
     res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ error: new Error(error).message })
