@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
+import ApiError from '@/utils/ApiError'
 
 const createSeason = async (req: Request, res: Response, next: NextFunction) => {
   const correctSeason = Joi.object({
@@ -14,8 +15,7 @@ const createSeason = async (req: Request, res: Response, next: NextFunction) => 
     })
     next()
   } catch (error) {
-    console.log(error)
-    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ error: new Error(error).message })
+    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
   }
 }
 

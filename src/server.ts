@@ -1,8 +1,9 @@
-import express, { Express, Request, Response, Application } from 'express'
+import express, { Express, Request, Response, Application, NextFunction } from 'express'
 import { CLOSE_DB, CONNECT_DB } from '@/config/mongdodb'
 import exitHook from 'async-exit-hook'
 import { env } from '@/config/environment'
 import { APIs_V1 } from '@/routes/v1'
+import { errorMiddleware } from '@/middlewares/error.middleware'
 
 const START_SERVER = () => {
 
@@ -13,6 +14,9 @@ const START_SERVER = () => {
 
   // v1 api routes
   app.use('/v1', APIs_V1)
+
+  // Middlewares handle error
+  app.use(errorMiddleware)
 
   app.listen(env.LOCAL_DEV_APP_PORT, () => {
     console.log(`3. Server is Fire at http://localhost:${env.LOCAL_DEV_APP_PORT}`)
