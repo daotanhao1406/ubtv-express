@@ -12,7 +12,7 @@ const EPISODE_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
-export const seasonModel = {
+export const episodeModel = {
   EPISODE_COLLECTION_NAME,
   EPISODE_COLLECTION_SCHEMA
 }

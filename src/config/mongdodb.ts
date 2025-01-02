@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from 'mongodb'
+import { Db, MongoClient, ServerApiVersion } from 'mongodb'
 import { env } from '@/config/environment'
 
 let ubtvDatabaseInstance = null
@@ -17,7 +17,7 @@ export const CONNECT_DB = async () => {
   ubtvDatabaseInstance = mongoClientInstance.db(env.DATABASE_NAME)
 }
 
-export const GET_DB = () => {
+export const GET_DB = (): Db => {
   if (!ubtvDatabaseInstance) throw new Error('MongoDB connection returns undefined')
   return ubtvDatabaseInstance
 }
