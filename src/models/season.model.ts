@@ -8,7 +8,6 @@ const SEASON_COLLECTION_SCHEMA = Joi.object({
   title: Joi.string().required().min(3).max(30).trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
   description: Joi.string().required().min(3).trim().strict(),
-  type: Joi.string().required().min(3).trim().strict(),
   characters: Joi.array().items(Joi.string()).default([]),
 
   createdAt: Joi.date().timestamp('javascript').default(Date.now()),

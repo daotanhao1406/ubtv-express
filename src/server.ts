@@ -1,13 +1,18 @@
 import express, { Express, Request, Response, Application, NextFunction } from 'express'
 import { CLOSE_DB, CONNECT_DB } from '@/config/mongdodb'
 import exitHook from 'async-exit-hook'
+import cors from 'cors'
 import { env } from '@/config/environment'
 import { APIs_V1 } from '@/routes/v1'
 import { errorMiddleware } from '@/middlewares/error.middleware'
+import { corsOptions } from '@/config/cors'
 
 const START_SERVER = () => {
 
   const app: Application = express()
+
+  // cors
+  app.use(cors(corsOptions))
 
   // parse json request body
   app.use(express.json())
