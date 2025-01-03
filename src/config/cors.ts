@@ -11,12 +11,12 @@ export const corsOptions = {
     //chỉnh sửa lại là không cần check !origin nữa, chỉ cần là dev thì tự động cho qua luôn.
     // Vì giống như POSTMAN, ở 1 số trường hợp ví dụ như Nextjs, nó sẽ cần phải gọi api từ phía server
     // thì khi đó origin (domain) cũng là undefined
-    if (!origin && env.NODE_ENV === 'dev') {
+    if (!origin && env.NODE_ENV === 'development') {
       return callback(null, true)
     }
 
     // ngược lại thì hiện tại code chúng ta sẽ nhảy vào trường hợp mode là production
-    
+
     // Kiểm tra dem origin có phải là domain được chấp nhận hay không
     if (WHITELIST_DOMAINS.includes(origin)) {
       return callback(null, true)
