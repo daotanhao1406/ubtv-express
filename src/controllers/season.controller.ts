@@ -11,4 +11,14 @@ const createSeason = async (req: Request, res: Response, next: NextFunction) => 
   }
 }
 
-export const seasonController = { createSeason }
+const getSeasonDetailsById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const seasonId = req.params.id
+    const result = await seasonService.getSeasonDetails(seasonId)
+    res.status(StatusCodes.OK).json(result)
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const seasonController = { createSeason, getSeasonDetailsById }

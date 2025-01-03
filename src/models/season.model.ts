@@ -17,19 +17,20 @@ const SEASON_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
-const createSeason = async (seasonData: Season) => {
+const createSeason = async (data: Season) => {
   try {
-    const createdSeason = await GET_DB().collection(SEASON_COLLECTION_NAME).insertOne(seasonData)
+    const validSeason = await validateBeforeCreateSeason(data)
+    const createdSeason = await GET_DB().collection(SEASON_COLLECTION_NAME).insertOne(validSeason)
     return createdSeason
   } catch (e) {
     throw new Error(e)
   }
 }
 
-const findOneSeasonById = async (id: ObjectId) => {
+const findOneSeasonById = async (id: ObjectId | string) => {
   try {
     const result = await GET_DB().collection(SEASON_COLLECTION_NAME).findOne({
-      _id: id
+      _id: new ObjectId(id)
     })
     return result
   } catch (e) {
@@ -37,9 +38,25 @@ const findOneSeasonById = async (id: ObjectId) => {
   }
 }
 
+const getSeasonDetails = async (id: ObjectId | string) => {
+  try {
+    const result = await GET_DB().collection(SEASON_COLLECTION_NAME).findOne({
+      _id: new ObjectId(id)
+    })
+    return result
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
+const validateBeforeCreateSeason = async (data: Season) => {
+  return await SEASON_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+}
+
 export const seasonModel = {
   SEASON_COLLECTION_NAME,
   SEASON_COLLECTION_SCHEMA,
   createSeason,
-  findOneSeasonById
+  findOneSeasonById,
+  getSeasonDetails
 }

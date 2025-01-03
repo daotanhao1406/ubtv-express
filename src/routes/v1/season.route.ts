@@ -9,4 +9,6 @@ router.route('/').get((req, res) => {
   res.status(StatusCodes.OK).json({ message: 'GET: Api get season' })
 }).post(seasonValidation.createSeason, seasonController.createSeason)
 
+router.route('/:id').get(seasonController.getSeasonDetailsById)
+
 export const seasonRoute = router
