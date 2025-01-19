@@ -23,9 +23,16 @@ const START_SERVER = () => {
   // Middlewares handle error
   app.use(errorMiddleware)
 
-  app.listen(env.LOCAL_DEV_APP_PORT, () => {
-    console.log(`3. Server is Fire at http://localhost:${env.LOCAL_DEV_APP_PORT}`)
-  })
+  if (env.NODE_ENV === 'production') {
+    app.listen(process.env.PORT, () => {
+      console.log(`3. Production: Server is Fire at ${process.env.PORT}`)
+    })
+  } else {
+    app.listen(env.LOCAL_DEV_APP_PORT, () => {
+      console.log(`3. Dev: Server is Fire at http://localhost:${env.LOCAL_DEV_APP_PORT}`)
+    })
+  }
+
 
   exitHook(() => {
     console.log('4. Disconnecting from MongoDB...')
