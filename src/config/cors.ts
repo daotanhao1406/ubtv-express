@@ -8,10 +8,10 @@ export const corsOptions = {
     // Cho phép việc gọi API bằng POSTMAN trên môi trường dev,
     // Thông thường khi sử dụng postman thì cái origin sẽ có giá trị là undefined
 
-    //chỉnh sửa lại là không cần check !origin nữa, chỉ cần là dev thì tự động cho qua luôn.
-    // Vì giống như POSTMAN, ở 1 số trường hợp ví dụ như Nextjs, nó sẽ cần phải gọi api từ phía server
+    // chỉnh sửa lại là không cần check !origin nữa, chỉ cần là dev thì tự động cho qua luôn.
+    // Vì nếu check origin thì giống như POSTMAN, ở 1 số trường hợp ví dụ như Nextjs, nó sẽ cần phải gọi api từ phía server
     // thì khi đó origin (domain) cũng là undefined
-    if (!origin && env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       return callback(null, true)
     }
 
