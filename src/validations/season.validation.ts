@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 import ApiError from '@/utils/ApiError'
 
-const createSeason = async (req: Request, res: Response, next: NextFunction) => {
+const createNewSeason = async (req: Request, res: Response, next: NextFunction) => {
   const correctSeason = Joi.object({
     title: Joi.string().required().min(3).max(30).trim().strict(),
     description: Joi.string().required().min(3).trim().strict()
@@ -20,5 +20,5 @@ const createSeason = async (req: Request, res: Response, next: NextFunction) => 
 }
 
 export const seasonValidation = {
-  createSeason
+  createNewSeason
 }

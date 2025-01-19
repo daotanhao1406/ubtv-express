@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { seasonRoute } from '@/routes/v1/season.route'
+import { episodeRoute } from '@/routes/v1/episode.route'
 
 const router = Router()
 
@@ -10,5 +11,7 @@ router.get('/status', (req, res) => {
 })
 
 router.use('/seasons', seasonRoute)
+
+router.use('/episodes', episodeRoute)
 
 export const APIs_V1 = router

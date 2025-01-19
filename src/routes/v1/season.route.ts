@@ -7,7 +7,7 @@ const router = Router()
 
 router.route('/').get((req, res) => {
   res.status(StatusCodes.OK).json({ message: 'GET: Api get season' })
-}).post(seasonValidation.createSeason, seasonController.createSeason)
+}).post(seasonValidation.createNewSeason, seasonController.createNewSeason)
 
 router.route('/:id').get(seasonController.getSeasonDetailsById)
 

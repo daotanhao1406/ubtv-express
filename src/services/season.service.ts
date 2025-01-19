@@ -4,11 +4,11 @@ import { seasonModel } from '@/models/season.model'
 import ApiError from '@/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
 
-const createSeason = async (reqBody: Season) => {
+const createNewSeason = async (reqBody: Season) => {
   try {
     const newSeason = { ...reqBody, slug: slugify(reqBody.title) }
 
-    const createdSeason = await seasonModel.createSeason(newSeason)
+    const createdSeason = await seasonModel.createNewSeason(newSeason)
 
     const getCreatedSeason = await seasonModel.findOneSeasonById(createdSeason.insertedId)
 
@@ -31,6 +31,6 @@ const getSeasonDetails = async (id: string) => {
 }
 
 export const seasonService = {
-  createSeason,
+  createNewSeason,
   getSeasonDetails
 }

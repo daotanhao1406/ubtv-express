@@ -2,6 +2,7 @@ import Joi from 'joi'
 import { GET_DB } from '@/config/mongdodb'
 import { Season } from '@/interfaces/season'
 import { ObjectId } from 'mongodb'
+import { episodeModel } from '@/models/episode.model'
 
 const SEASON_COLLECTION_NAME = 'seasons'
 const SEASON_COLLECTION_SCHEMA = Joi.object({
@@ -16,7 +17,12 @@ const SEASON_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
-const createSeason = async (data: Season) => {
+
+const validateBeforeCreateSeason = async (data: Season) => {
+  return await SEASON_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+}
+
+const createNewSeason = async (data: Season) => {
   try {
     const validSeason = await validateBeforeCreateSeason(data)
     const createdSeason = await GET_DB().collection(SEASON_COLLECTION_NAME).insertOne(validSeason)
@@ -39,23 +45,37 @@ const findOneSeasonById = async (id: ObjectId | string) => {
 
 const getSeasonDetails = async (id: ObjectId | string) => {
   try {
-    const result = await GET_DB().collection(SEASON_COLLECTION_NAME).findOne({
-      _id: new ObjectId(id)
-    })
-    return result
+    // const result = await GET_DB().collection(SEASON_COLLECTION_NAME).findOne({
+    //   _id: new ObjectId(id)
+    // })
+    const result = await GET_DB().collection(SEASON_COLLECTION_NAME).aggregate([
+      {
+        $match: {
+          _id: new ObjectId(id),
+          _destroy: false
+        }
+      },
+      {
+        $lookup: {
+          from: episodeModel.EPISODE_COLLECTION_NAME,
+          localField: '_id',
+          foreignField: 'seasonId',
+          as: 'episodes'
+        }
+      }
+    ]).toArray()
+    return result[0] || null
+
   } catch (e) {
     throw new Error(e)
   }
 }
 
-const validateBeforeCreateSeason = async (data: Season) => {
-  return await SEASON_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
-}
 
 export const seasonModel = {
   SEASON_COLLECTION_NAME,
   SEASON_COLLECTION_SCHEMA,
-  createSeason,
+  createNewSeason,
   findOneSeasonById,
   getSeasonDetails
 }
