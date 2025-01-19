@@ -17,6 +17,8 @@ const SEASON_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
+// chỉ định ra những field không được phép cập nhật cho func update
+const INVALID_UPDATE_FIELD = ['_id', 'createdAt']
 
 const validateBeforeCreateSeason = async (data: Season) => {
   return await SEASON_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
@@ -45,9 +47,6 @@ const findOneSeasonById = async (id: ObjectId | string) => {
 
 const getSeasonDetails = async (id: ObjectId | string) => {
   try {
-    // const result = await GET_DB().collection(SEASON_COLLECTION_NAME).findOne({
-    //   _id: new ObjectId(id)
-    // })
     const result = await GET_DB().collection(SEASON_COLLECTION_NAME).aggregate([
       {
         $match: {
@@ -71,11 +70,45 @@ const getSeasonDetails = async (id: ObjectId | string) => {
   }
 }
 
+const updateSeason = async (id: ObjectId | string, updateData) => {
+  try {
+    // Lọc ra những field không cho phép update
+    Object.keys(updateData).forEach((fieldName) => {
+      if (INVALID_UPDATE_FIELD.includes(fieldName)) {
+        delete updateData[fieldName]
+      }
+    })
+
+    const result = await GET_DB().collection(SEASON_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: updateData },
+      { returnDocument: 'after' }
+    )
+    return result
+
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
+const deleteOneById = async (id: ObjectId | string) => {
+  try {
+    const result = await GET_DB().collection(SEASON_COLLECTION_NAME).deleteOne({
+      _id: new ObjectId(id)
+    })
+    return result
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
 
 export const seasonModel = {
   SEASON_COLLECTION_NAME,
   SEASON_COLLECTION_SCHEMA,
   createNewSeason,
   findOneSeasonById,
-  getSeasonDetails
+  getSeasonDetails,
+  updateSeason,
+  deleteOneById
 }

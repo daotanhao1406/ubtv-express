@@ -20,5 +20,24 @@ const getSeasonDetailsById = async (req: Request, res: Response, next: NextFunct
     next(e)
   }
 }
+const updateSeason = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const seasonId = req.params.id
+    const updatedSeason = await seasonService.updateSeason(seasonId, req.body)
+    res.status(StatusCodes.OK).json(updatedSeason)
+  } catch (e) {
+    next(e)
+  }
+}
 
-export const seasonController = { createNewSeason, getSeasonDetailsById }
+const deleteSeason = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const seasonId = req.params.id
+    const result = await seasonService.deleteSeason(seasonId)
+    res.status(StatusCodes.OK).json(result)
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const seasonController = { createNewSeason, getSeasonDetailsById, updateSeason, deleteSeason }

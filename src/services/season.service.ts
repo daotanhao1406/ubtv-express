@@ -29,8 +29,40 @@ const getSeasonDetails = async (id: string) => {
     throw e
   }
 }
+const updateSeason = async (id: string, reqBody) => {
+  try {
+
+
+    const updateData = {
+      ...reqBody,
+      updatedAt: Date.now()
+    }
+    const updatedSeason = await seasonModel.updateSeason(id, updateData)
+    if (!updatedSeason) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Season not found')
+    }
+    return updatedSeason
+  } catch (e) {
+    throw e
+  }
+}
+const deleteSeason = async (id: string) => {
+  try {
+    const targetSeason = await seasonModel.findOneSeasonById(id)
+    if (!targetSeason) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Season not found')
+    }
+    await seasonModel.deleteOneById(id)
+
+    return { message: 'Delete season successfully!' }
+  } catch (e) {
+    throw e
+  }
+}
 
 export const seasonService = {
   createNewSeason,
-  getSeasonDetails
+  getSeasonDetails,
+  updateSeason,
+  deleteSeason
 }
